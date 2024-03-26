@@ -1,14 +1,36 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const index = () => {
+  const [login, setLogin] = useState(false);
+
+  const getLogin = async () => {
+    try {
+      const isLogin = await AsyncStorage.getItem("isLogin");
+
+      if (isLogin === "true") {
+        setLogin(true);
+      } else {
+        setLogin(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const Login = () => {
+    if (login) {
+      router.replace("/(tabs)");
+    } else {
+      router.push("/signin");
+    }
+  };
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push("/(auth)/signin");
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+    getLogin().then(Login);
+  }, [login]);
   return (
     <View style={styles.container}>
       <Image
