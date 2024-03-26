@@ -332,7 +332,88 @@ const home = () => {
           }}
           backdropComponent={renderBackdrop}
         >
-          <Text>Hello</Text>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "bold",
+              textAlign: "left",
+              padding: 10,
+            }}
+          >
+            Thời gian
+          </Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#fff",
+              borderBottomWidth: 1,
+              borderColor: "black",
+              paddingBottom: 10,
+              marginHorizontal: 16,
+              marginBottom: 16,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+              }}
+            >
+              Hôm nay
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#fff",
+              borderBottomWidth: 1,
+              borderColor: "black",
+              paddingBottom: 10,
+              marginHorizontal: 16,
+              marginBottom: 16,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+              }}
+            >
+              7 ngày qua
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#fff",
+              borderBottomWidth: 1,
+              borderColor: "black",
+              paddingBottom: 10,
+              marginHorizontal: 16,
+              marginBottom: 16,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+              }}
+            >
+              Tháng này
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#fff",
+              borderBottomWidth: 1,
+              borderColor: "black",
+              paddingBottom: 10,
+              marginHorizontal: 16,
+              marginBottom: 16,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+              }}
+            >
+              Tháng trước
+            </Text>
+          </TouchableOpacity>
         </BottomSheet>
       </GestureHandlerRootView>
     </SafeAreaView>
