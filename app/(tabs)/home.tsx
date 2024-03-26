@@ -6,11 +6,15 @@ import {
   SafeAreaView,
   Dimensions,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useCallback, useRef, useMemo } from "react";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import { BarChart, PieChart } from "react-native-chart-kit";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetView,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const home = () => {
@@ -18,7 +22,18 @@ const home = () => {
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
+  const handelOpenPress = () => {
+    bottomSheetRef.current?.expand();
+  };
   const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  const renderBackdrop = useCallback(
+    (prop: any) => (
+      <BottomSheetBackdrop appearsOnIndex={1} disappearsOnIndex={0} {...prop} />
+    ),
+    []
+  );
+
   return (
     <SafeAreaView>
       <GestureHandlerRootView>
@@ -48,7 +63,7 @@ const home = () => {
               <Text style={styles.textLogo}>Studio</Text>
             </View>
           </View>
-          <View
+          <TouchableOpacity
             style={{
               flexDirection: "row",
               width: "40%",
@@ -61,10 +76,11 @@ const home = () => {
               paddingVertical: 10,
               backgroundColor: "#fff",
             }}
+            onPress={handelOpenPress}
           >
             <Text>Hôm nay, 27/03/2024</Text>
             <AntDesign name="caretdown" size={18} color="gray" />
-          </View>
+          </TouchableOpacity>
           <View
             style={{
               alignItems: "center",
@@ -308,6 +324,13 @@ const home = () => {
           ref={bottomSheetRef}
           onChange={handleSheetChanges}
           snapPoints={snapPoints}
+          index={-1}
+          enablePanDownToClose={true}
+          enableHandlePanningGesture={true}
+          handleIndicatorStyle={{
+            backgroundColor: "#000",
+          }}
+          backdropComponent={renderBackdrop}
         >
           <Text>Hello</Text>
         </BottomSheet>
