@@ -4,33 +4,23 @@ import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const index = () => {
-  const [login, setLogin] = useState(false);
-
   const getLogin = async () => {
     try {
       const isLogin = await AsyncStorage.getItem("isLogin");
 
       if (isLogin === "true") {
-        setLogin(true);
+        router.push("/(tabs)/home");
       } else {
-        setLogin(false);
+        router.push("/signin");
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const Login = () => {
-    if (login) {
-      router.replace("/(tabs)/home");
-    } else {
-      router.push("/signin");
-    }
-  };
-
   useEffect(() => {
-    getLogin().then(Login);
-  }, [login]);
+    getLogin();
+  });
   return (
     <View style={styles.container}>
       <Image

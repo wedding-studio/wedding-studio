@@ -71,7 +71,7 @@ const signin = () => {
           JSON.stringify(response.data.employee)
         );
         await AsyncStorage.setItem("isLogin", "true");
-        router.push("/(tabs)/");
+        router.push("/(tabs)/home");
       }
     } catch (error) {
       console.log(error);
