@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, Image, SafeAreaView } from "react-native";
 import React from "react";
-import { PieChart } from "react-native-chart-kit";
 
 const home = () => {
   return (
@@ -30,61 +29,6 @@ const home = () => {
           <Text style={styles.textLogo}>Studio</Text>
         </View>
       </View>
-      <PieChart
-        data={[
-          {
-            name: "Seoul",
-            population: 21500000,
-            color: "rgba(131, 167, 234, 1)",
-            legendFontColor: "#7F7F7F",
-            legendFontSize: 15,
-          },
-          {
-            name: "Toronto",
-            population: 2800000,
-            color: "rgba(0, 0, 0, 1)",
-            legendFontColor: "#7F7F7F",
-            legendFontSize: 15,
-          },
-          {
-            name: "Beijing",
-            population: 527612,
-            color: "rgba(123, 31, 162, 1)",
-            legendFontColor: "#7F7F7F",
-            legendFontSize: 15,
-          },
-          {
-            name: "New York",
-            population: 8538000,
-            color: "rgba(0, 0, 0, 1)",
-            legendFontColor: "#7F7F7F",
-            legendFontSize: 15,
-          },
-          {
-            name: "Moscow",
-            population: 11920000,
-            color: "rgba(0, 0, 0, 1)",
-            legendFontColor: "#7F7F7F",
-            legendFontSize: 15,
-          },
-        ]}
-        width={200}
-        height={200}
-        chartConfig={{
-          backgroundColor: "#1cc910",
-          backgroundGradientFrom: "#eff3ff",
-          backgroundGradientTo: "#efefef",
-          decimalPlaces: 2,
-          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          style: {
-            borderRadius: 16,
-          },
-        }}
-        accessor="population"
-        backgroundColor="transparent"
-        paddingLeft="15"
-        absolute
-      />
     </SafeAreaView>
   );
 };
