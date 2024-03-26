@@ -24,12 +24,16 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: useClientOnlyValue(false, true),
         lazy: true,
+        // tabBarStyle: {
+        //   height: 80,
+        // },
       }}
     >
       <Tabs.Screen
         name="home"
         options={{
           title: "Phân tích",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="area-chart" color={color} />
           ),
