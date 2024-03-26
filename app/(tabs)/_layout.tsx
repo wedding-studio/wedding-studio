@@ -23,6 +23,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: useClientOnlyValue(false, true),
+        lazy: true,
       }}
     >
       <Tabs.Screen
@@ -61,6 +62,15 @@ export default function TabLayout() {
           title: "Nhiệm vụ",
           tabBarIcon: ({ color }) => (
             <Octicons name="tasklist" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="invoice"
+        options={{
+          title: "Hóa đơn",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="file-text" size={24} color={color} />
           ),
         }}
       />

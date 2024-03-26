@@ -22,7 +22,7 @@ const index = () => {
 
   const Login = () => {
     if (login) {
-      router.replace("/(tabs)");
+      router.replace("/(tabs)/home");
     } else {
       router.push("/signin");
     }
