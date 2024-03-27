@@ -8,7 +8,13 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useCallback, useRef, useMemo } from "react";
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  useEffect,
+} from "react";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import { BarChart, PieChart } from "react-native-chart-kit";
 import BottomSheet, {
@@ -16,12 +22,123 @@ import BottomSheet, {
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const home = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
+  const [status, setstatus] = useState([]);
+  const [employee, setemployee] = useState({});
+  const [revenue, setRevenue] = useState([]);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [labelsBarChart, setlabelsBarChart] = useState([]);
+  const [dataBarChart, setdataBarChart] = useState([]);
+  const [serviceUsage, setserviceUsage] = useState([]);
+  const [pieData, setPieData] = useState([{}]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const getEmployee = async () => {
+    try {
+      const employee = await AsyncStorage.getItem("employee");
+      if (employee !== null) {
+        setemployee(JSON.parse(employee));
+        getStatus(JSON.parse(employee).id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getStatus = async (id: string) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/statistics/task/all/${id}`
+      );
+
+      setstatus(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getRevenue = async (time: string, labelType: string) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/statistics/revenue/${time}`
+      );
+      if (response.data) {
+        setRevenue(response.data.revenue);
+        setTotalRevenue(response.data.totalRevenue);
+        if (labelType === "month") {
+          setlabelsBarChart(
+            response.data.revenue.map((item) => `Tháng ${item.month}`)
+          );
+        } else if (labelType === "hour") {
+          setlabelsBarChart(
+            response.data.revenue.map((item) => `${item.hour}`)
+          );
+        }
+        setdataBarChart(response.data.revenue.map((item) => item.total));
+      } else {
+        setRevenue([]);
+        setTotalRevenue(0);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const colors = [
+    "rgba(255, 99, 132, 1)",
+    "rgba(54, 162, 235, 1)",
+    "rgba(255, 206, 86, 1)",
+    "rgba(75, 192, 192, 1)",
+    "rgba(153, 102, 255, 1)",
+    "rgba(255, 159, 64, 1)",
+  ];
+
+  const getServicesUsage = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/statistics/service/usage`
+      );
+
+      const pieChartData = response.data
+        .map((item, index) => {
+          const population = Number(item.totalQuantity);
+          if (isNaN(population)) {
+            console.error(
+              `Invalid population for item ${index}: ${item.totalQuantity}`
+            );
+            return null;
+          }
+
+          return {
+            name: item._id,
+            population: population,
+            color: colors[index % colors.length],
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          };
+        })
+        .filter((item) => item !== null);
+
+      setPieData(pieChartData);
+      setIsLoading(false);
+      console.log("serviceUsage", response.data);
+      console.log("pieChart", pieChartData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getEmployee();
+    getRevenue("day", "hour");
+    getServicesUsage();
   }, []);
+
+  const handleSheetChanges = useCallback((index: number) => {}, []);
   const handelOpenPress = () => {
     bottomSheetRef.current?.expand();
   };
@@ -33,6 +150,10 @@ const home = () => {
     ),
     []
   );
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <SafeAreaView>
@@ -117,78 +238,57 @@ const home = () => {
                 gap: 10,
               }}
             >
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: "#3ed94e",
-                  borderRadius: 30,
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/done.png")}
-                  style={{ width: 30, height: 30 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontWeight: "bold",
-                    color: "#fff",
-                    flex: 1,
-                  }}
-                >
-                  Đã xong 10
-                </Text>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: "#f8e32f",
-                  borderRadius: 30,
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/progress.png")}
-                  style={{ width: 30, height: 30 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontWeight: "bold",
-                    color: "#fff",
-                    flex: 1,
-                  }}
-                >
-                  Đang làm 10
-                </Text>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: "#f40c1d",
-                  borderRadius: 30,
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/notdone.png")}
-                  style={{ width: 30, height: 30 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontWeight: "bold",
-                    color: "#fff",
-                    flex: 1,
-                  }}
-                >
-                  Chưa làm 10
-                </Text>
-              </View>
+              {status.map((item, index) => {
+                let backgroundColor;
+                let statusText;
+                let image;
+
+                switch (item.status) {
+                  case 1:
+                    backgroundColor = "#3ed94e";
+                    statusText = "Đã xong";
+                    image = require("../../assets/images/done.png");
+                    break;
+                  case 2:
+                    backgroundColor = "#f8e32f";
+                    statusText = "Đang làm";
+                    image = require("../../assets/images/progress.png");
+                    break;
+                  case 3:
+                    backgroundColor = "#f40c1d";
+                    statusText = "Chưa làm";
+                    image = require("../../assets/images/notdone.png");
+                    break;
+                  default:
+                    backgroundColor = "#fff";
+                    statusText = "Không xác định";
+                }
+
+                return (
+                  <View
+                    key={index}
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      backgroundColor: backgroundColor,
+                      borderRadius: 30,
+                    }}
+                  >
+                    <Image source={image} style={{ width: 30, height: 30 }} />
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: "bold",
+                        color: "#fff",
+                        flex: 1,
+                      }}
+                    >
+                      {statusText} {item.count}
+                    </Text>
+                  </View>
+                );
+              })}
             </View>
           </View>
           <View
@@ -218,38 +318,37 @@ const home = () => {
             >
               Doanh thu
             </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                color: "#000",
+              }}
+            >
+              Tổng: {totalRevenue} tr
+            </Text>
             <BarChart
               data={{
-                labels: [
-                  "January",
-                  "February",
-                  "March",
-                  "April",
-                  "May",
-                  "June",
-                ],
+                labels: labelsBarChart,
                 datasets: [
                   {
-                    data: [20, 45, 28, 80, 99, 43],
+                    data: dataBarChart,
                   },
                 ],
               }}
               width={Dimensions.get("window").width - 20}
               height={220}
-              yAxisLabel="$"
+              yAxisLabel="tr"
+              showValuesOnTopOfBars={true}
+              fromZero={true}
+              showBarTops={true}
               chartConfig={{
                 backgroundGradientFrom: "#fff",
                 backgroundGradientTo: "#fff",
-                decimalPlaces: 0,
                 color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                 style: {
                   borderRadius: 16,
                 },
-              }}
-              style={{
-                marginVertical: 8,
-                borderRadius: 16,
               }}
             />
           </View>
@@ -271,37 +370,9 @@ const home = () => {
               shadowRadius: 3.84,
             }}
           >
+            <Text>Dịch vụ được sử dụng nhiều nhất</Text>
             <PieChart
-              data={[
-                {
-                  name: "Seoul",
-                  population: 21500000,
-                  color: "rgba(131, 167, 234, 1)",
-                  legendFontColor: "#7F7F7F",
-                  legendFontSize: 15,
-                },
-                {
-                  name: "Toronto",
-                  population: 2800000,
-                  color: "rgba(123, 234, 164, 1)",
-                  legendFontColor: "#7F7F7F",
-                  legendFontSize: 15,
-                },
-                {
-                  name: "New York",
-                  population: 8538000,
-                  color: "rgba(234, 123, 164, 1)",
-                  legendFontColor: "#7F7F7F",
-                  legendFontSize: 15,
-                },
-                {
-                  name: "Moscow",
-                  population: 11920000,
-                  color: "rgba(123, 234, 164, 1)",
-                  legendFontColor: "#7F7F7F",
-                  legendFontSize: 15,
-                },
-              ]}
+              data={pieData}
               width={Dimensions.get("window").width - 20}
               height={220}
               chartConfig={{
@@ -315,8 +386,11 @@ const home = () => {
               }}
               accessor="population"
               backgroundColor="transparent"
-              paddingLeft="15"
+              paddingLeft="5"
               absolute
+              center={[10, 10]}
+              hasLegend={true}
+              avoidFalseZero={true}
             />
           </View>
         </ScrollView>
