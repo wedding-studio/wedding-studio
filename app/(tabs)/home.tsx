@@ -159,85 +159,26 @@ const home = () => {
     <SafeAreaView>
       <GestureHandlerRootView>
         <ScrollView>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              padding: 10,
-              gap: 10,
-            }}
-          >
+          <View style={styles.logoContainer}>
             <Image
               source={require("../../assets/images/logo.png")}
               style={styles.image}
             />
-            <View
-              style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
+            <View style={styles.textLogoContainer}>
               <Text style={styles.textLogo}>Wedding</Text>
               <Text style={styles.textLogo}>Studio</Text>
             </View>
           </View>
           <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              width: "40%",
-              alignItems: "center",
-              justifyContent: "center",
-              paddingHorizontal: 10,
-              borderRadius: 20,
-              margin: 5,
-              gap: 3,
-              paddingVertical: 10,
-              backgroundColor: "#fff",
-            }}
+            style={styles.dateContainer}
             onPress={handelOpenPress}
           >
             <Text>Hôm nay, 27/03/2024</Text>
             <AntDesign name="caretdown" size={18} color="gray" />
           </TouchableOpacity>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 15,
-              gap: 10,
-              backgroundColor: "#fff",
-              borderRadius: 10,
-              margin: 5,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "bold",
-                color: "#000",
-              }}
-            >
-              Công việc
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: 10,
-                gap: 10,
-              }}
-            >
+          <View style={styles.cardContainer}>
+            <Text style={styles.cardTitle}>Công việc</Text>
+            <View style={styles.statusContainer}>
               {status.map((item, index) => {
                 let backgroundColor;
                 let statusText;
@@ -267,23 +208,10 @@ const home = () => {
                 return (
                   <View
                     key={index}
-                    style={{
-                      flex: 1,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      backgroundColor: backgroundColor,
-                      borderRadius: 30,
-                    }}
+                    style={[styles.statusItem, { backgroundColor }]}
                   >
                     <Image source={image} style={{ width: 30, height: 30 }} />
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontWeight: "bold",
-                        color: "#fff",
-                        flex: 1,
-                      }}
-                    >
+                    <Text style={styles.statusText}>
                       {statusText} {item.count}
                     </Text>
                   </View>
@@ -291,33 +219,8 @@ const home = () => {
               })}
             </View>
           </View>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 15,
-              gap: 10,
-              backgroundColor: "#fff",
-              borderRadius: 10,
-              margin: 5,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "bold",
-                color: "#000",
-              }}
-            >
-              Doanh thu
-            </Text>
+          <View style={styles.cardContainer}>
+            <Text style={styles.cardTitle}>Doanh thu</Text>
             <Text
               style={{
                 fontSize: 16,
@@ -352,25 +255,10 @@ const home = () => {
               }}
             />
           </View>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 15,
-              gap: 10,
-              backgroundColor: "#fff",
-              borderRadius: 10,
-              margin: 5,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-            }}
-          >
-            <Text>Dịch vụ được sử dụng nhiều nhất</Text>
+          <View style={styles.cardContainer}>
+            <Text style={styles.cardTitle}>
+              Dịch vụ được sử dụng nhiều nhất
+            </Text>
             <PieChart
               data={pieData}
               width={Dimensions.get("window").width - 20}
@@ -499,20 +387,79 @@ export default home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+  },
+  logoContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
     alignItems: "center",
+    padding: 10,
+    gap: 10,
   },
   image: {
     width: 40,
     height: 40,
+  },
+  textLogoContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 2,
   },
   textLogo: {
     fontSize: 18,
     fontWeight: "bold",
     fontFamily: "SpaceMono",
   },
-  contentContainer: {
-    flex: 1,
+  dateContainer: {
+    flexDirection: "row",
+    width: "40%",
     alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    borderRadius: 20,
+    margin: 5,
+    gap: 3,
+    paddingVertical: 10,
+    backgroundColor: "#fff",
+  },
+  cardContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
+    gap: 10,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    margin: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000",
+  },
+  statusContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    gap: 10,
+  },
+  statusItem: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 30,
+  },
+  statusText: {
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#fff",
+    flex: 1,
   },
 });
