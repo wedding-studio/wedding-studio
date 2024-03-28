@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, ScrollView, ActivityIndicator, FlatList, Image } from "react-native";
+import { StyleSheet, Text, TextInput, View, ScrollView, ActivityIndicator, FlatList, Image, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Icon } from "@expo/vector-icons/build/createIconSet";
 import { Ionicons } from "@expo/vector-icons";
@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { isLoading } from "expo-font";
+import { router } from "expo-router";
 
 const service = () => {
   const [service, setService] = useState([]);
@@ -123,19 +124,26 @@ const service = () => {
 
   //....Box item service
   const listItems = service.map((item, index) => (
-    <View style={styles.container} key={index}>
+    
+    <TouchableOpacity style={styles.container} key={index}   onPress={() => {
+      console.log(item._id);
+      router.navigate({
+          pathname: "screens/DetailService",
+          params: { id: item._id },
+      });
+  }}>
       <View style={styles.containerItem}>
         <Image source={require('../../assets/images/logo.png')} style={styles.image} />
         <Text style={styles.name}>{item.name}</Text>
       </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "space-between", padding: 15 }}>
+      <View style={{  alignItems: 'center', justifyContent: "space-between", padding: 15 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ fontSize: 18, fontWeight: '500', marginRight: 5 }}>Trạng thái:</Text>
           {(item.status) ? (<Text>còn hoạt động</Text>) : (<Text>tạm ngừng hoạt động</Text>)}
         </View>
-        <Text style={{ fontSize: 18, fontWeight: '700', color: 'red' }}>{item.price}</Text>
+        <Text style={{ fontSize: 18, fontWeight: '700', color: 'red',marginTop:10 }}>{item.price} VND</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   ));
 
 
@@ -221,6 +229,7 @@ const styles = StyleSheet.create({
   container:{
     backgroundColor:'#FBE7E7',
    margin:15,
+    borderRadius:12,
   
   }
 });

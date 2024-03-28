@@ -56,7 +56,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="service"
         options={{
-          title: "Dịch vụ",
+          headerShown: false,
+          tabBarLabel: "Dịch vụ",
+          
           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
         }}
       />
