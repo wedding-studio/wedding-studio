@@ -73,10 +73,31 @@ const DetailService = () => {
           console.log(error);
         }
       };
+      const updateTaskStatus = async (status) => {
+        try {
+            const token = await AsyncStorage.getItem("token");
+          let response = await axios.patch(
+            `${process.env.REACT_APP_API_URL}/service/${id}`,
+            { status },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (response.data) {
+            console.log("Task status updated successfully");
+            goBack();
+          }
+          console.log(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
     useEffect(() => {
         getServiceById(id);
 
-    }, []);
+    }, [updateTaskStatus]);
 
 
 
@@ -132,6 +153,7 @@ const DetailService = () => {
                                 <Text style={{
                                     fontSize: 15,
                                     fontWeight: 'bold',
+                                    
                                 }}>Trạng thái:</Text>
                                 {
                                     service.status ? <Text style={{ color: 'green' }}>Đang hoạt động</Text> : <Text style={{ color: 'red' }}>Ngừng hoạt động</Text>
@@ -154,12 +176,39 @@ const DetailService = () => {
                             
 
                         </View>
+                        <TouchableOpacity style={{
+                            backgroundColor: '#2051E5',
+                            padding: 10,
+                            borderRadius: 10,
+                            width: '50%',
+                            alignSelf: 'center',
+                            alignItems: 'center'
+
+                        }}
+                        onPress={()=>updateTaskStatus((service.status)?false:true)}
+                          >
+                            {(service.status==true) ? 
+                          (  <Text style={{
+                                color: '#ffffff',
+                                fontSize: 18,
+                                fontWeight: 'bold',
+
+                            }} >Ngừng hoạt động</Text>) : 
+                            (  <Text style={{
+                                color: '#ffffff',
+                                fontSize: 18,
+                                fontWeight: 'bold',
+
+                            }} >Bật dịch vụ</Text>)}
+                            </TouchableOpacity>
+                        
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'space-around',
                             marginTop: 40
                         
                         }}>
+                            
                             <TouchableOpacity style={{
                                 backgroundColor: 'red',
                                 padding: 10,

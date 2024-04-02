@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, ScrollView, ActivityIndicator, FlatList, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TextInput, View, ScrollView, ActivityIndicator, FlatList, Image, TouchableOpacity, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Icon } from "@expo/vector-icons/build/createIconSet";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,6 +16,14 @@ const service = () => {
   const [token, setToken] = useState(null);
   const [user, setuser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [nameSV, setnameSV] = useState('');
+  const [note, setnote] = useState('');
+  const [price, setprice] = useState('');
+  const [VlnameSV, setVLnameSV] = useState('');
+  const [VLnote, setVLnote] = useState('');
+  const [VLprice, setVLprice] = useState('');
+  const [addVisitable, setaddVisitable] = useState(false);
 
   const getDataLocal = async () => {
     try {
@@ -162,17 +170,9 @@ const service = () => {
 
           <ButtonAdd title={'Thêm dịch vụ mới'} st={{ marginTop: 30,marginBottom:20 }}
             onPress={() => {
-              const newTaskData = {
-                "name": "Thuê bối cảnh trong studio",
-                "description": "Chụp hình cưới tại studio với nhiều concept và phong cách như Hàn Quốc, châu Âu, cổ điển, lãng mạn...",
-                "status": true,
-                "price": 100000,
-                "createdAt": "2024-03-19T17:00:00.000Z",
-                "updatedAt": "2024-03-19T17:00:00.000Z",
-              };
-              console.log(newTaskData);
+             setaddVisitable(true);
 
-              createService(newTaskData);
+              
             }}
           />
 
@@ -183,11 +183,88 @@ const service = () => {
               <ScrollView>
               {listItems}
             </ScrollView>
+           
               // Rest of the code
             )
 
 
           }
+           <Modal visible={addVisitable}>
+              <Text style={{
+                fontSize: 24,
+                fontWeight: 'bold',
+                textAlign: 'center',
+                marginTop: 20,
+                marginBottom: 20
+              
+              }}>Thêm dịch vụ mới</Text>
+              <TextInput placeholder="Nhập tên dịch vụ" style={styles.edittext} onChangeText={setnameSV}/>
+              <Text style={{color:'red',marginLeft:10}}>{VlnameSV}</Text>
+              <TextInput placeholder="Nhập mô tả dịch vụ" style={styles.edittext} onChangeText={setnote} />
+              <Text style={{color:'red',marginLeft:10}}>{VLnote}</Text>
+              <TextInput placeholder="Nhập giá dịch vụ" style={styles.edittext} onChangeText={setprice} />
+              <Text style={{color:'red',marginLeft:10}}>{VLprice}</Text>
+              <ButtonAdd title={'Thêm dịch vụ mới'} st={{ marginTop: 30,marginBottom:20 }}
+            onPress={() => {
+
+              let check = true;
+              if(nameSV.trim() === '') {
+                setVLnameSV('Tên dịch vụ không được để trống');
+                check = false;
+
+              }else{
+                setVLnameSV('');
+              }
+
+
+              if(note.trim() === '') {
+                setVLnote('mô tả dịch vụ không được để trống');
+                check = false;
+
+              }else{
+                setVLnote('');
+              }
+
+
+
+              if(price.trim() === '') {
+                setVLprice('giá dịch vụ không được để trống');
+                check = false;
+
+              }else if(isNaN(Number(price))||Number(price)<=0){
+                setVLprice('giá dịch vụ phải là số và > 0');
+                check = false;
+              }else{
+                setVLprice('');
+              }
+
+
+
+             if(check==true){
+              const newTaskData = {
+                "name": nameSV,
+                "description": note,
+                "status": true,
+                "price": price,
+                
+              };
+              console.log(newTaskData);
+
+              createService(newTaskData);
+              setaddVisitable(false);
+             }
+            }}
+          />
+            <Text onPress={()=>setaddVisitable(false)} style={{
+                fontSize: 24,
+                fontWeight: 'bold',
+                textAlign: 'center',
+                marginTop: 20,
+                marginBottom: 20
+              
+              }}>Quay lại</Text>
+
+            </Modal>
 
 
 
@@ -206,7 +283,7 @@ const styles = StyleSheet.create({
   containerItem: {
     flexDirection:'row',
     
-    backgroundColor:'#2051E5',
+    backgroundColor:'#FCA311',
     alignItems:'center',
     justifyContent:'center',
     borderTopLeftRadius:12,
@@ -227,9 +304,17 @@ const styles = StyleSheet.create({
    
   },
   container:{
-    backgroundColor:'#FBE7E7',
+    backgroundColor:'#FCFCFC',
    margin:15,
     borderRadius:12,
   
+  }
+  ,
+  edittext:{
+    height:50,
+    borderWidth:1,
+    borderColor:'#000000',
+    borderRadius:12,
+    margin:10
   }
 });
