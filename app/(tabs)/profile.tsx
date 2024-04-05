@@ -44,13 +44,17 @@ const profile = () => {
         <AntDesign name="right" size={24} color="black" />
       </View>
 
-      <View style={styles.menuItem}>
+    <TouchableOpacity onPress={()=>{
+      router.push('/screens/Customer');
+    }}>
+    <View style={styles.menuItem}>
         <AntDesign name="user" size={24} color="black" />
         <Text style={styles.menuText}>Khách hàng</Text>
         <AntDesign name="right" size={24} color="black" />
       </View>
+    </TouchableOpacity>
 
-      <View style={styles.menuItem}>
+      <View style={styles.menuItem} >
         <Feather name="users" size={24} color="black" />
         <Text style={styles.menuText}>Nhân viên</Text>
         <AntDesign name="right" size={24} color="black" />
