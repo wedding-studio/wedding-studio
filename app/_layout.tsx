@@ -56,6 +56,8 @@ function RootLayoutNav() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="screens/DetailService" options={{headerTitle:'Chi tiết dịch vụ'  }} />
+        <Stack.Screen name="screens/Customer" options={{headerTitle:'Khách hàng'  }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
       </Stack>
     </ThemeProvider>
